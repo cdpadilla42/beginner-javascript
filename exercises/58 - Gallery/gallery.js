@@ -16,18 +16,15 @@ function Gallery(gallery) {
       return;
     }
     console.log(el);
-    openModal();
-    const modalImg = modal.querySelector('img');
-    console.log(modalImg);
-    modalImg.setAttribute('src', el.target.src);
-  }
-
-  function openModal() {
-    modal.classList.add('open');
+    modal.querySelector('img').src = el.src;
+    modal.querySelector('h2').innerText = el.title;
+    modal.querySelector('p').innerText = el.dataset.description;
   }
 
   images.forEach((img) => {
-    img.addEventListener('click', showImage);
+    img.addEventListener('click', (e) => {
+      showImage(e.currentTarget);
+    });
   });
 }
 
