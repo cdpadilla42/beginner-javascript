@@ -6,20 +6,43 @@ function Gallery(gallery) {
   const modal = document.querySelector('.modal');
   const prevBttn = modal.querySelector('.prev');
   const nextBttn = modal.querySelector('.next');
+  let currentImg;
 
-  const heading = modal.querySelector('h2');
-  const desc = modal.querySelector('p');
+  function handleClickOutside(e) {
+    console.log(e);
+    if (e.target == e.currentTarget) {
+      closeModal();
+    }
+  }
 
   function showImage(el) {
     if (!el) {
       console.log('no image passed!');
       return;
     }
-    console.log(el);
+    currentImg = el;
     modal.querySelector('img').src = el.src;
     modal.querySelector('h2').innerText = el.title;
     modal.querySelector('p').innerText = el.dataset.description;
+    openModal();
   }
+
+  function openModal() {
+    // check if it is already open
+    if (modal.matches('.open')) {
+      console.info('modal already open');
+      return;
+    }
+    modal.classList.add('open');
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    // TODO add event listeners for clicks and keyboards...
+  }
+
+  // Event Listeners
+  modal.addEventListener('click', handleClickOutside);
 
   images.forEach((img) => {
     img.addEventListener('click', (e) => {
