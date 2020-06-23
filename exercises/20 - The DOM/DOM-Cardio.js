@@ -35,11 +35,11 @@ img.src =
 
 // set the source to an image
 // set the width to 250
-img.setAttribute('width', '250px');
+img.width = 250;
 // add a class of cute
 img.classList.add('cute');
 // add an alt of Cute Puppy
-img.setAttribute('alt', 'Cute Puppy');
+img.alt = 'Cute Puppy';
 // Append that image to the wrapper
 div.appendChild(img);
 
