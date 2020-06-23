@@ -21,7 +21,9 @@ function openModal(e) {
 }
 
 function closeModal(e) {
-  if (e.currentTarget == e.target) {
+  const isOutside = !e.target.closest('.modal-inner');
+
+  if (isOutside) {
     modal.classList.remove('open');
   }
 }
