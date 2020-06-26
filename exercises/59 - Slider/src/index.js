@@ -1,67 +1,62 @@
 function Slider(slider) {
-  let slides = Array.from(slider.querySelectorAll('.slide'));
-  let current = slider.querySelector('.current') || slides[0];
-  let nextBttn = slider.querySelector('.goToNext');
-  let prevBttn = slider.querySelector('.goToPrev');
+  if (!slider instanceof Element) {
+    throw new Error('No slider passed in');
+  }
+  // create some variables for working with the slider
+  let prev;
+  let current;
+  let next;
+  // select elements needed for the slider
+  const slides = slider.querySelector('.slides');
+  const nextBttn = slider.querySelector('.goToNext');
+  const prevBttn = slider.querySelector('.goToPrev');
 
-  function showCurrentSlide() {
+  function startSlider() {
+    current = slider.querySelector('.current') || slides.firstElementChild;
+    prev = current.previousElementSibling || slides.lastElementChild;
+    next = current.nextElementSibling || slides.firstElementChild;
+  }
+
+  function applyClasses() {
     current.classList.add('current');
+    prev.classList.add('prev');
+    next.classList.add('next');
   }
 
-  function setPrevAndNextSlides() {
-    console.log(current.nextElementSibling);
-    // add class to next slide
-    if (current.nextElementSibling) {
-      current.nextElementSibling.classList.add('next');
+  function move(direction) {
+    // strip all the classes off the slides
+    const classesToRemove = ['prev', 'current', 'next'];
+    prev.classList.remove(...classesToRemove);
+    next.classList.remove(...classesToRemove);
+    current.classList.remove(...classesToRemove);
+
+    if (direction === 'back') {
+      // make a new array of the new values and destructure them over and into the prev current and next variables
+
+      [prev, current, next] = [
+        prev.previousElementSibling || slides.lastElementChild,
+        prev,
+        current,
+      ];
     } else {
-      // if at the end, add to the first slide in list
-      slides[0].classList.add('next');
+      [prev, current, next] = [
+        current,
+        next,
+        next.nextElementSibling || slides.firstElementChild,
+      ];
     }
-    // add class to prev slide
-    if (current.previousElementSibling) {
-      current.previousElementSibling.classList.add('prev');
-    } else {
-      // if at the end, add to the last slide in list
-      slides[slides.length - 1].classList.add('prev');
-    }
+    applyClasses();
   }
 
-  function removePrevAndNextClasses() {
-    slider.querySelector('.next').classList.remove('next');
-    slider.querySelector('.prev').classList.remove('prev');
-  }
+  // constructor
+  // when slider created, runs
+  startSlider();
+  applyClasses();
 
-  function initializeSlider() {
-    showCurrentSlide();
-    setPrevAndNextSlides();
-  }
-
-  function shiftCurrentSlide() {
-    slider.querySelector('.current').classList.remove('current');
-    current.classList.add('current');
-  }
-
-  function nextSlideGo() {
-    removePrevAndNextClasses();
-    // move current over one
-    current = current.nextElementSibling || slides[0];
-    shiftCurrentSlide();
-    setPrevAndNextSlides();
-  }
-
-  function prevSlideGo() {
-    removePrevAndNextClasses();
-    // move current over one
-    current = current.previousElementSibling || slides[slides.length - 1];
-    shiftCurrentSlide();
-    setPrevAndNextSlides();
-  }
-
-  // Event listeners
-  window.addEventListener('load', initializeSlider);
-  nextBttn.addEventListener('click', nextSlideGo);
-  prevBttn.addEventListener('click', prevSlideGo);
+  // Event Listeners
+  prevBttn.addEventListener('click', () => move('back'));
+  nextBttn.addEventListener('click', move);
 }
 
-Slider(document.querySelector('.slider'));
-Slider(document.querySelector('.dog-slider'));
+const mySlider = Slider(document.querySelector('.slider'));
+const dogSlider = Slider(document.querySelector('.dog-slider'));
