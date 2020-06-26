@@ -48,6 +48,14 @@ function Slider(slider) {
     applyClasses();
   }
 
+  function handleKeyUp(e) {
+    const isActive = document.activeElement === slides;
+    if (isActive) {
+      if (e.key === 'ArrowRight') move();
+      if (e.key === 'ArrowLeft') move('back');
+    }
+  }
+
   // constructor
   // when slider created, runs
   startSlider();
@@ -56,6 +64,7 @@ function Slider(slider) {
   // Event Listeners
   prevBttn.addEventListener('click', () => move('back'));
   nextBttn.addEventListener('click', move);
+  window.addEventListener('keyup', handleKeyUp);
 }
 
 const mySlider = Slider(document.querySelector('.slider'));
