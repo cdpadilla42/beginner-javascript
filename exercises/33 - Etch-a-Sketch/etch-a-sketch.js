@@ -15,6 +15,9 @@ ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
 ctx.lineWidth = MOVE_AMOUNT;
 
+let hue = 0;
+ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
 ctx.beginPath(); // start the drawing;
 ctx.moveTo(x, y);
 ctx.lineTo(x, y);
@@ -22,7 +25,8 @@ ctx.stroke();
 
 // write a draw function
 function draw({ key }) {
-  console.log(key);
+  hue += 10;
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
   ctx.beginPath();
   ctx.moveTo(x, y);
   // move line valuse
@@ -39,6 +43,8 @@ function draw({ key }) {
     case 'ArrowRight':
       x += MOVE_AMOUNT;
       break;
+    default:
+      break;
   }
   ctx.lineTo(x, y);
   ctx.stroke();
@@ -53,6 +59,17 @@ function handleKey(e) {
 }
 
 // clear or shake function
+function removeShakeClass() {
+  console.log('done shaking!');
+  canvas.classList.remove('shake');
+}
+
+function clearCanvas() {
+  canvas.classList.add('shake');
+  ctx.clearRect(0, 0, width, height);
+  canvas.addEventListener('animationend', removeShakeClass, { once: true });
+}
 
 // listen for arrow keys
 window.addEventListener('keydown', handleKey);
+shakeBttn.addEventListener('click', clearCanvas); // add enter functionality
