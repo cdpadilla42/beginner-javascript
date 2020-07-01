@@ -3,7 +3,7 @@ const list = document.querySelector('.list');
 const myStorage = localStorage;
 // Array to hold our state
 
-const items = JSON.parse(myStorage.getItem('items')) || [];
+let items = JSON.parse(myStorage.getItem('items')) || [];
 
 // listen for submit event on form
 
@@ -25,7 +25,10 @@ function handleSubmit(e) {
 }
 
 function handleDeleteItem(e) {
-  console.log('deleting');
+  const itemID = parseInt(e.currentTarget.parentElement.dataset.id);
+  const newItems = items.filter((item) => item['id'] !== itemID);
+  items = newItems;
+  list.dispatchEvent(new CustomEvent('itemsUpdated'));
 }
 
 function displayItems() {
@@ -39,6 +42,11 @@ function displayItems() {
     })
     .join('');
   list.innerHTML = html;
+  // add delete event listeners
+  const deleteButtons = list.querySelectorAll('button');
+  deleteButtons.forEach((button) => {
+    button.addEventListener('click', handleDeleteItem);
+  });
 }
 
 function mirrorDataToLocalStorage() {
