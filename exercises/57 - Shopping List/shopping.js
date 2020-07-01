@@ -3,7 +3,7 @@ const list = document.querySelector('.list');
 const myStorage = localStorage;
 // Array to hold our state
 
-let items = JSON.parse(myStorage.getItem('items')) || [];
+const items = [];
 
 // listen for submit event on form
 
@@ -24,11 +24,12 @@ function handleSubmit(e) {
   list.dispatchEvent(new CustomEvent('itemsUpdated'));
 }
 
-function handleDeleteItem(e) {
-  const itemID = parseInt(e.currentTarget.parentElement.dataset.id);
-  const newItems = items.filter((item) => item['id'] !== itemID);
-  items = newItems;
-  list.dispatchEvent(new CustomEvent('itemsUpdated'));
+function deleteItem(e) {
+  // const itemID = parseInt(e.currentTarget.parentElement.dataset.id);
+  // const newItems = items.filter((item) => item['id'] !== itemID);
+  // items = newItems;
+  // list.dispatchEvent(new CustomEvent('itemsUpdated'));
+  console.log('deleting');
 }
 
 function displayItems() {
@@ -43,17 +44,29 @@ function displayItems() {
     .join('');
   list.innerHTML = html;
   // add delete event listeners
-  const deleteButtons = list.querySelectorAll('button');
-  deleteButtons.forEach((button) => {
-    button.addEventListener('click', handleDeleteItem);
-  });
+  // const deleteButtons = list.querySelectorAll('button');
+  // deleteButtons.forEach((button) => {
+  //   button.addEventListener('click', handleDeleteItem);
+  // });
 }
 
 function mirrorDataToLocalStorage() {
   localStorage.setItem('items', JSON.stringify(items));
 }
 
+function restoreFromLocalStorage() {
+  const lstItems = JSON.parse(myStorage.getItem('items'));
+  if (lstItems.length) {
+    items.push(...lstItems);
+  }
+  list.dispatchEvent(new CustomEvent('itemsUpdated'));
+}
+
 shoppingForm.addEventListener('submit', handleSubmit);
-window.addEventListener('load', displayItems);
 list.addEventListener('itemsUpdated', displayItems);
 list.addEventListener('itemsUpdated', mirrorDataToLocalStorage);
+list.addEventListener('click', (e) => {
+  if (e.target.matches('button')) deleteItem();
+});
+
+restoreFromLocalStorage();
