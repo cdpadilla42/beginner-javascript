@@ -1,31 +1,26 @@
-function tabs(tablist) {
-  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
-  const tabPanels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+const tabs = document.querySelector('.tabs');
+const tabButtons = tabs.querySelectorAll('[role="tab"]');
+const tabPanels = tabs.querySelectorAll('[role="tabpanel"]');
 
-  function switchTabContent(id) {
-    const prevOpenTab = tabPanels.find((tab) => !tab.hidden);
-    const newOpenTab = tabPanels.find(
-      (tab) => tab.getAttribute('aria-labelledby') === id
-    );
-    prevOpenTab.hidden = true;
-    newOpenTab.hidden = false;
-  }
-
-  function handleTabClick(e) {
-    // switch active tab and remove previously active tag
-    const prevTag = tabs.find((tab) => tab.matches('[aria-selected="true"]'));
-    if (prevTag === e.currentTarget) return;
-
-    prevTag.setAttribute('aria-selected', 'false');
-    e.currentTarget.setAttribute('aria-selected', 'true');
-
-    // switch visible tag content
-    switchTabContent(e.currentTarget.id);
-  }
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', handleTabClick);
+function handleTabClick(e) {
+  // hide all other tab panels
+  tabPanels.forEach((tabPanel) => {
+    return (tabPanel.hidden = true);
   });
+  // mark all tabs as unselected
+  tabButtons.forEach((tab) => tab.setAttribute('aria-selected', false));
+  // mark the clicked tab as selected
+  e.currentTarget.setAttribute('aria-selected', true);
+  // find the associated tabPanel and show it
+  const { id } = e.currentTarget;
+  // const openingTab = tabPanels.find(
+  //   (panel) => panel.getAttribute('aria-labelledby') === id
+  // );
+
+  const openingTab = tabs.querySelector(`[aria-labelledby="${id}"]`);
+  openingTab.hidden = false;
 }
 
-tabs(document.querySelector('[role="tablist"]'));
+tabButtons.forEach((button) =>
+  button.addEventListener('click', handleTabClick)
+);
