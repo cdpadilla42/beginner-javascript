@@ -19,11 +19,8 @@ function tabs(tablist) {
     prevTag.setAttribute('aria-selected', 'false');
     e.currentTarget.setAttribute('aria-selected', 'true');
 
-    // switch visible tag
+    // switch visible tag content
     switchTabContent(e.currentTarget.id);
-
-    // hide current open tag
-    // show needed tag
   }
 
   tabs.forEach((tab) => {
