@@ -7,8 +7,8 @@ const faceCanvas = document.querySelector('.face');
 const faceCtx = faceCanvas.getContext('2d');
 
 const faceDetector = new window.FaceDetector();
-const SIZE = 10;
-const SCALE = 1.35;
+let SIZE = 10;
+let SCALE = 1.35;
 
 async function populateVideo() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -75,3 +75,16 @@ function censor({ boundingBox: face }) {
 }
 
 populateVideo().then(detect);
+
+// Scales
+
+const scaleSlider = document.querySelector('[name="SCALE"]');
+const sizeSlider = document.querySelector('[name="SIZE"]');
+
+scaleSlider.addEventListener('change', (e) => {
+  SCALE = e.currentTarget.value;
+});
+
+sizeSlider.addEventListener('change', (e) => {
+  SIZE = e.currentTarget.value;
+});
