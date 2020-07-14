@@ -2,27 +2,32 @@ function textGenerator(typer) {
   const textOptionInputs = Array.from(
     typer.querySelectorAll('[name="filter"]')
   );
+  const input = typer.querySelector('[name="text"]');
+  const resultElm = document.querySelector('.result');
 
   function generateText(input) {
+    let filteredText;
     switch (input.value) {
       case 'sarcastic':
-        console.log('SaRcAsTiC');
+        filteredText = makeSarcastic();
         break;
       case 'funky':
-        console.log('funkyyyyyy');
+        filteredText = makeFunky();
         break;
       case 'unable':
-        console.log('.....');
+        filteredText = makeUnable();
         break;
       default:
         console.log('none selected');
         break;
     }
+    renderToPage(filteredText);
   }
 
   function makeSarcastic() {
-    const input = typer.querySelector('[name="text"]').value;
-    const sarcastic = input
+    // TODO refactor so this isn't repeated
+    const message = input.value;
+    const sarcastic = message
       .split('')
       .map((letter, i) => {
         if (i % 2) return letter.toUpperCase();
@@ -32,15 +37,40 @@ function textGenerator(typer) {
     return sarcastic;
   }
 
+  function makeUnable() {
+    const message = input.value;
+    const unable = message
+      .split(' ')
+      .map((word, i) => {
+        if (i % 2) return word + '...';
+        return word + ' ';
+      })
+      .join('');
+    return unable;
+  }
+
+  function makeFunky() {
+    return 'SPOOOOOOOKY';
+  }
+
+  function renderToPage(text) {
+    resultElm.textContent = text;
+  }
+
+  function handleTextChange() {
+    generateText(textOptionInputs.find((input) => input.checked));
+  }
+
   textOptionInputs.forEach((input) =>
     input.addEventListener('input', (e) => {
       generateText(e.currentTarget);
     })
   );
 
+  input.addEventListener('input', handleTextChange);
+
   // generate text for currently selected option
-  generateText(textOptionInputs.find((input) => input.checked));
-  makeSarcastic();
+  handleTextChange();
 }
 
 textGenerator(document.querySelector('.typer'));
