@@ -7,8 +7,13 @@ const faceCanvas = document.querySelector('.face');
 const faceCtx = faceCanvas.getContext('2d');
 
 const faceDetector = new window.FaceDetector();
-let SIZE = 10;
-let SCALE = 1.35;
+const options = {
+  SIZE: 10,
+  SCALE: 1.35,
+};
+
+// let SIZE = 10;
+// let SCALE = 1.35;
 
 async function populateVideo() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -53,19 +58,19 @@ function censor({ boundingBox: face }) {
     // 4 draw args
     face.x,
     face.y,
-    SIZE,
-    SIZE
+    options.SIZE,
+    options.SIZE
   );
   // take that face back out and draw it back at normal size
-  const width = face.width * SCALE;
-  const height = face.height * SCALE;
+  const width = face.width * options.SCALE;
+  const height = face.height * options.SCALE;
 
   faceCtx.drawImage(
     faceCanvas,
     face.x, // where do we pull from
     face.y,
-    SIZE,
-    SIZE,
+    options.SIZE,
+    options.SIZE,
     // draw args
     face.x - (width - face.width) / 2,
     face.y - (height - face.height) / 2,
@@ -78,13 +83,10 @@ populateVideo().then(detect);
 
 // Scales
 
-const scaleSlider = document.querySelector('[name="SCALE"]');
-const sizeSlider = document.querySelector('[name="SIZE"]');
+function handleOptions(e) {
+  const { name, value } = e.currentTarget;
+  options[name] = value;
+}
 
-scaleSlider.addEventListener('change', (e) => {
-  SCALE = e.currentTarget.value;
-});
-
-sizeSlider.addEventListener('change', (e) => {
-  SIZE = e.currentTarget.value;
-});
+const controls = document.querySelectorAll('[type="range"]');
+controls.forEach((input) => input.addEventListener('input', handleOptions));
