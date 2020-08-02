@@ -1,17 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>APIs</title>
+    <link rel="stylesheet" href="../base.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>APIs</title>
-  <link rel="stylesheet" href="../base.css">
-</head>
+  <body>
+    <p class="user"></p>
 
-<body>
-  <script>
+    <script>
+      function handleErr(err) {
+        console.error('WUOH');
+        console.error(err);
+        userEl.textContent = 'Something went wrong!';
+        userEl.setAttribute('style', 'color: red;');
+      }
 
-  </script>
-</body>
+      const userEl = document.querySelector('.user');
 
+      async function displayUser(username) {
+        const endpoint = `https://api.github.com/users/${username}`;
+        userEl.textContent = 'Loading...';
+        const raw = await fetch(endpoint);
+        const data = await raw.json();
+        userEl.textContent = `${data.name} - ${data.blog}`;
+      }
+
+      displayUser('wesbos').catch(handleErr);
+
+      // const wesPromise = fetch(endpoint);
+      // wesPromise
+      //   .then((data) => {
+      //     return data.json();
+      //   })
+      //   .then((data) => {
+      //     userEl.textContent = `${data.name} - ${data.blog}`;
+      //   })
+      //   .catch(handleErr);
+
+      // async function getData(endpoint) {
+      //   const wesPromise = await (await fetch(endpoint)).json();
+      //   console.log(wesPromise);
+      // }
+      // getData(endpoint);
+    </script>
+  </body>
 </html>
