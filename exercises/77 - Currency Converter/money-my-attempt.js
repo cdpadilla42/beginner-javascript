@@ -1,10 +1,6 @@
 const selectFromCurrency = document.querySelector('[name="from_currency"]');
 const selectToCurrency = document.querySelector('[name="to_currency"]');
-const amountEl = document.querySelector('[name="from_amount"]');
-const toEl = document.querySelector('.to_amount');
 const form = document.querySelector('.app form');
-const endpoint = 'https://api.exchangeratesapi.io/latest';
-const ratesByBase = {};
 const currencies = {
   USD: 'United States Dollar',
   AUD: 'Australian Dollar',
@@ -48,46 +44,22 @@ function generateOptions(options) {
     .join('');
 }
 
-async function getRates(base = 'USD') {
+async function getRates(currencyBase) {
   const fromCode = selectFromCurrency.value;
-
-  const rates = await (await fetch(`${endpoint}?base=${base}`)).json();
-  return rates;
+  const baseEndpoint = 'https://api.exchangeratesapi.io/latest';
+  const result = await (await fetch(`${baseEndpoint}?base=${fromCode}`)).json();
+  return result;
 }
 
-async function convert(amount, from, to) {
-  // first check if we even have the rates to convert from that currency
-  if (!ratesByBase[from]) {
-    console.log(`Oh no! We don't have ${from} to conver to ${to} so lesgo`);
-    // fetch data
-    const data = await getRates(from);
-    // cache it
-    ratesByBase[from] = data.rates;
-    console.log('rates', data.rates);
-    console.log('cache', ratesByBase);
-  }
-  // convert amount
-  const rate = ratesByBase[from][to];
-  const convertedAmount = rate * amount;
-  console.log(`${amount} ${from} is ${convertedAmount} in ${to}`);
-  return convertedAmount;
-}
-
-function formatCurrency(amount, currency) {
-  return Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(amount);
-}
-
-async function handleInput(e) {
-  const rawAmount = await convert(
-    amountEl.value,
-    selectFromCurrency.value,
-    selectToCurrency.value
-  );
-
-  toEl.textContent = formatCurrency(rawAmount, selectToCurrency.value);
+async function displayConversion(e) {
+  e.preventDefault();
+  const toCode = selectToCurrency.value;
+  const fetchResults = await getRates();
+  const rate = fetchResults.rates[toCode];
+  const initialPrice = form.from_amount.value;
+  const convertedPrice = (initialPrice * rate).toFixed(2);
+  const toAmountEl = document.querySelector('.to_amount');
+  toAmountEl.textContent = convertedPrice;
 }
 
 const optionsHTML = generateOptions(currencies);
@@ -95,4 +67,4 @@ const optionsHTML = generateOptions(currencies);
 // TODO append options to the selection fields
 selectToCurrency.insertAdjacentHTML('beforeend', optionsHTML);
 selectFromCurrency.insertAdjacentHTML('beforeend', optionsHTML);
-form.addEventListener('input', handleInput);
+form.addEventListener('change', displayConversion);
