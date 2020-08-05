@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dad Jokes</title>
+    <link rel="stylesheet" href="../../base.css" />
+    <style>
+      :root {
+        --size: 20px;
+      }
+
+      .wrapper {
+        text-align: center;
+      }
+
+      .joke {
+        font-size: 5rem;
+        font-weight: 900;
+      }
+
+      .loader {
+        display: inline-block;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .lds-grid {
+        display: inline-block;
+        position: relative;
+        width: var(--size);
+        height: var(--size);
+      }
+
+      /* 80px orig */
+      .lds-grid div {
+        position: absolute;
+        width: calc(var(--size) * 0.2);
+        height: calc(var(--size) * 0.2);
+        border-radius: 50%;
+        background: var(--yellow);
+        animation: lds-grid 1.2s linear infinite;
+      }
+      .lds-grid div:nth-child(1) {
+        top: calc(var(--size) * 0.1);
+        left: calc(var(--size) * 0.1);
+        animation-delay: 0s;
+      }
+      .lds-grid div:nth-child(2) {
+        top: calc(var(--size) * 0.1);
+        left: calc(var(--size) * 0.4);
+        animation-delay: -0.4s;
+      }
+      .lds-grid div:nth-child(3) {
+        top: calc(var(--size) * 0.1);
+        left: calc(var(--size) * 0.7);
+        animation-delay: -0.8s;
+      }
+      .lds-grid div:nth-child(4) {
+        top: calc(var(--size) * 0.4);
+        left: calc(var(--size) * 0.1);
+        animation-delay: -0.4s;
+      }
+      .lds-grid div:nth-child(5) {
+        top: calc(var(--size) * 0.4);
+        left: calc(var(--size) * 0.4);
+        animation-delay: -0.8s;
+      }
+      .lds-grid div:nth-child(6) {
+        top: calc(var(--size) * 0.4);
+        left: calc(var(--size) * 0.7);
+        animation-delay: -1.2s;
+      }
+      .lds-grid div:nth-child(7) {
+        top: calc(var(--size) * 0.7);
+        left: calc(var(--size) * 0.1);
+        animation-delay: -0.8s;
+      }
+      .lds-grid div:nth-child(8) {
+        top: calc(var(--size) * 0.7);
+        left: calc(var(--size) * 0.4);
+        animation-delay: -1.2s;
+      }
+      .lds-grid div:nth-child(9) {
+        top: calc(var(--size) * 0.7);
+        left: calc(var(--size) * 0.7);
+        animation-delay: -1.6s;
+      }
+      @keyframes lds-grid {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="joke">
+        <p>Dad Jokes.</p>
+      </div>
+      <button class="getJoke">
+        <span>Get A Joke</span>
+        <div class="loader hide">
+          <div class="lds-grid">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <script src="./jokes.js" type="module"></script>
+  </body>
+</html>
